@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&amp;P Prediction Cake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=Noto+Serif+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sp-red: #a10e18;
+            --sp-red-deep: #a10e18;
+            --sp-cream: #fff9e3;
+            --sp-text: #251612;
+            --sp-muted: #7d685d;
+            --sp-shadow: 0 24px 60px rgba(76, 43, 30, 0.14);
+            --font-display: "Bodoni Moda", "Noto Serif Thai", Georgia, serif;
+            --font-body: "Bodoni Moda", "Noto Serif Thai", Georgia, serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-body);
+            color: var(--sp-text);
+            background: var(--sp-cream);
+            font-weight: 500;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .app-screen[hidden] {
+            display: none !important;
+        }
+
+        .page-welcome {
+            min-height: 100vh;
+            background: var(--sp-red);
+        }
+
+        .welcome-outline {
+            min-height: 100vh;
+            max-width: 1520px;
+            margin: 0 auto;
+            padding: 34px;
+        }
+
+        .welcome-canvas {
+            position: relative;
+            min-height: calc(100vh - 68px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 52px;
+            padding: 64px clamp(24px, 4vw, 56px) 64px;
+            border: 1.5px solid rgba(76, 44, 28, 0.7);
+            border-radius: 42px;
+            background: rgba(255, 249, 227, 0.97);
+            box-shadow: 0 22px 70px rgba(38, 6, 8, 0.18);
+            overflow: hidden;
+        }
+
+        .welcome-canvas::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.08), transparent 26%),
+                radial-gradient(circle at bottom left, rgba(161, 14, 24, 0.06), transparent 30%);
+            pointer-events: none;
+        }
+
+        .welcome-backdrop {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 249, 227, 0.9), rgba(255, 249, 227, 0.96)),
+                radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.55), transparent 16%),
+                linear-gradient(180deg, rgba(161, 14, 24, 0.03), rgba(130, 93, 65, 0.02));
+            opacity: 1;
+        }
+
+        .outline-brand-row,
+        .outline-quote-card,
+        .outline-start-button {
+            position: relative;
+            z-index: 1;
+        }
+
+        .outline-brand-row {
+            width: 100%;
+            max-width: 840px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 34px;
+            margin-top: 2px;
+        }
+
+        .outline-logo {
+            width: clamp(124px, 18vw, 188px);
+            aspect-ratio: 1;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .outline-logo img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 14px 36px rgba(93, 23, 20, 0.16);
+        }
+
+        .outline-brand-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .outline-brand-copy h1 {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(2.35rem, 5.4vw, 4.6rem);
+            line-height: 0.9;
+            font-weight: 600;
+            letter-spacing: -0.045em;
+            color: #1f1510;
+        }
+
+        .outline-brand-copy span {
+            color: #8b766c;
+            font-size: clamp(1.1rem, 2vw, 1.7rem);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        .outline-quote-card {
+            width: min(100%, 820px);
+            min-height: min(38vh, 400px);
+            margin-top: 2px;
+            padding: 48px 42px;
+            border: 1.5px solid rgba(40, 29, 24, 0.92);
+            border-radius: 34px;
+            background:
+                linear-gradient(180deg, rgba(255, 253, 244, 0.98), rgba(255, 249, 227, 0.95)),
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.05), transparent 32%);
+            box-shadow: 0 24px 50px rgba(82, 55, 39, 0.05);
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+
+        .outline-quote-text {
+            margin: 0;
+            max-width: 700px;
+            font-family: var(--font-display);
+            font-size: clamp(2.35rem, 4.4vw, 4rem);
+            line-height: 0.98;
+            font-weight: 600;
+            letter-spacing: -0.045em;
+            color: #1d130f;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .outline-quote-subtext {
+            max-width: 640px;
+            margin: 20px 0 0;
+            color: #877268;
+            font-size: clamp(1rem, 1.45vw, 1.16rem);
+            line-height: 1.72;
+            font-weight: 500;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .outline-quote-text.is-fading,
+        .outline-quote-subtext.is-fading {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        .outline-start-button {
+            min-width: 232px;
+            padding: 20px 36px;
+            margin-top: auto;
+            border: 1.5px solid rgba(34, 24, 19, 0.92);
+            border-radius: 999px;
+            background: linear-gradient(180deg, #fffdf4, #fff9e3);
+            color: #16120f;
+            font-family: var(--font-display);
+            font-size: clamp(1.15rem, 2vw, 1.4rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            box-shadow: 0 12px 28px rgba(49, 27, 20, 0.08);
+            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+            cursor: pointer;
+        }
+
+        .outline-start-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(180deg, #fffdf7, #fff4cb);
+            box-shadow: 0 18px 34px rgba(49, 27, 20, 0.12);
+        }
+
+        .page-choice,
+        .page-result,
+        .page-prediction {
+            min-height: 100vh;
+            background: var(--sp-red);
+        }
+
+        .choice-outline,
+        .result-outline,
+        .prediction-outline {
+            min-height: 100vh;
+            max-width: 1520px;
+            margin: 0 auto;
+            padding: 34px;
+        }
+
+        .choice-canvas,
+        .result-canvas,
+        .prediction-canvas {
+            position: relative;
+            min-height: calc(100vh - 68px);
+            padding: 52px 56px 56px;
+            border: 1.5px solid rgba(76, 44, 28, 0.7);
+            border-radius: 42px;
+            background: rgba(255, 249, 227, 0.97);
+            box-shadow: 0 22px 70px rgba(38, 6, 8, 0.18);
+            overflow: hidden;
+        }
+
+        .choice-canvas::before,
+        .result-canvas::before,
+        .prediction-canvas::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.08), transparent 26%),
+                radial-gradient(circle at bottom left, rgba(161, 14, 24, 0.06), transparent 30%);
+            pointer-events: none;
+        }
+
+        .choice-header,
+        .result-header,
+        .prediction-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .choice-heading,
+        .result-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 760px;
+        }
+
+        .choice-title,
+        .result-title,
+        .prediction-title {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(2.15rem, 4vw, 3.6rem);
+            line-height: 0.92;
+            font-weight: 600;
+            letter-spacing: -0.045em;
+            color: #1f1510;
+        }
+
+        .choice-subtitle,
+        .result-subtitle,
+        .prediction-subtitle {
+            margin: 0;
+            color: #8b766c;
+            font-size: clamp(1rem, 1.5vw, 1.18rem);
+            line-height: 1.65;
+            font-weight: 500;
+        }
+
+        .choice-logo,
+        .result-logo,
+        .prediction-logo {
+            width: clamp(106px, 13vw, 156px);
+            flex: 0 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 12px 26px rgba(93, 23, 20, 0.16);
+        }
+
+        .choice-logo img,
+        .result-logo img,
+        .prediction-logo img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .flavor-list {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 14px;
+            max-width: 980px;
+        }
+
+        .flavor-list.is-two-column {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 28px;
+        }
+
+        .flavor-panel {
+            position: relative;
+            z-index: 1;
+            max-width: 980px;
+            margin-top: 10px;
+            padding: 28px 30px;
+            border: 1.5px solid rgba(40, 29, 24, 0.9);
+            border-radius: 30px;
+            background:
+                linear-gradient(180deg, rgba(255, 253, 244, 0.82), rgba(255, 249, 227, 0.72)),
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.04), transparent 30%);
+            box-shadow: 0 18px 36px rgba(82, 55, 39, 0.04);
+        }
+
+        .choice-layout {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.55fr);
+            gap: 30px;
+            align-items: start;
+            width: 100%;
+            max-width: 1180px;
+            margin-top: 10px;
+        }
+
+        .choice-layout .flavor-panel {
+            max-width: none;
+            margin-top: 0;
+        }
+
+        .cake-preview-card {
+            position: relative;
+            z-index: 1;
+            padding: 22px 22px 24px;
+            border: 1.5px solid rgba(40, 29, 24, 0.9);
+            border-radius: 30px;
+            background:
+                linear-gradient(180deg, rgba(255, 253, 244, 0.92), rgba(255, 249, 227, 0.78)),
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.04), transparent 32%);
+            box-shadow: 0 18px 36px rgba(82, 55, 39, 0.05);
+        }
+
+        .cake-preview-frame {
+            position: relative;
+            aspect-ratio: 4 / 5;
+            border-radius: 24px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(40, 29, 24, 0.14);
+        }
+
+        .cake-preview-frame img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .cake-preview-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(28, 20, 16, 0.08), transparent 20%, transparent 75%, rgba(28, 20, 16, 0.12));
+        }
+
+        .cake-overlay-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .cake-overlay-row.is-bottom {
+            justify-content: flex-start;
+        }
+
+        .cake-overlay-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 249, 227, 0.92);
+            border: 1px solid rgba(40, 29, 24, 0.12);
+            box-shadow: 0 8px 18px rgba(49, 27, 20, 0.12);
+            color: #2a1a14;
+            font-family: var(--font-display);
+            font-size: 0.92rem;
+            line-height: 1;
+            letter-spacing: -0.01em;
+            font-weight: 600;
+        }
+
+        .cake-overlay-badge.is-emoji {
+            position: absolute;
+            inset: 0;
+            min-height: auto;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            font-size: 0;
+        }
+
+        .cake-overlay-badge.is-hidden {
+            display: none;
+        }
+
+        .cake-topping-item {
+            position: absolute;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            line-height: 1;
+            filter: drop-shadow(0 4px 10px rgba(49, 27, 20, 0.2));
+            user-select: none;
+            z-index: 2;
+        }
+
+        .cake-topping-item.is-fruit {
+            font-size: 2.05rem;
+        }
+
+        .cake-topping-item.is-sprinkle {
+            font-size: 1.45rem;
+        }
+
+        .cake-decoration-item {
+            position: absolute;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            line-height: 1;
+            filter: drop-shadow(0 4px 10px rgba(49, 27, 20, 0.2));
+            user-select: none;
+            z-index: 3;
+            font-size: 1.55rem;
+        }
+
+        .cake-preview-meta {
+            display: grid;
+            gap: 8px;
+        }
+
+        .cake-preview-title {
+            margin: 18px 0 0;
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 2.3vw, 2.2rem);
+            line-height: 1.02;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: #1f1510;
+        }
+
+        .cake-preview-copy {
+            margin: 10px 0 0;
+            color: #7d685d;
+            font-size: 1rem;
+            line-height: 1.68;
+            font-weight: 500;
+        }
+
+        .flavor-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            background: transparent;
+            color: #1a120e;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 180ms ease, color 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+        }
+
+        .flavor-option:hover {
+            transform: translateX(4px);
+            color: var(--sp-red);
+            border-color: rgba(161, 14, 24, 0.18);
+            background: rgba(255, 255, 255, 0.48);
+            box-shadow: 0 10px 18px rgba(88, 56, 42, 0.05);
+        }
+
+        .flavor-option.is-selected {
+            color: var(--sp-red);
+            border-color: rgba(161, 14, 24, 0.42);
+            background: rgba(161, 14, 24, 0.08);
+            box-shadow: 0 12px 24px rgba(88, 56, 42, 0.08);
+        }
+
+        .flavor-option.is-selected .flavor-dot {
+            background: var(--sp-red);
+            box-shadow: 0 0 0 4px rgba(161, 14, 24, 0.12);
+        }
+
+        .flavor-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            background: #1b1512;
+            flex: 0 0 auto;
+            margin-top: 15px;
+        }
+
+        .flavor-name {
+            font-family: var(--font-display);
+            font-size: clamp(1.55rem, 2.7vw, 2.5rem);
+            line-height: 1.02;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+        }
+
+        .choice-footer,
+        .result-footer,
+        .prediction-footer {
+            position: relative;
+            z-index: 1;
+            margin-top: 36px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .outline-secondary-button {
+            min-width: 180px;
+            padding: 16px 24px;
+            border: 1.5px solid rgba(34, 24, 19, 0.92);
+            border-radius: 999px;
+            background: transparent;
+            color: #16120f;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            cursor: pointer;
+            transition: transform 180ms ease, background 180ms ease;
+        }
+
+        .outline-secondary-button:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.36);
+        }
+
+        .result-body {
+            position: relative;
+            z-index: 1;
+            max-width: 820px;
+            min-height: 46vh;
+            margin: 20px auto 0;
+            padding: 48px 42px;
+            border: 1.5px solid rgba(40, 29, 24, 0.92);
+            border-radius: 34px;
+            background:
+                linear-gradient(180deg, rgba(255, 253, 244, 0.98), rgba(255, 249, 227, 0.95)),
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.05), transparent 32%);
+            box-shadow: 0 24px 50px rgba(82, 55, 39, 0.05);
+            display: grid;
+            place-items: center;
+            text-align: center;
+        }
+
+        .result-kicker {
+            margin: 0 0 12px;
+            color: #8b766c;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .result-selected {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 4.4vw, 4.6rem);
+            line-height: 1;
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            color: #1a120e;
+        }
+
+        .result-copy {
+            max-width: 580px;
+            margin: 18px 0 0;
+            color: #877268;
+            font-size: clamp(1rem, 1.5vw, 1.16rem);
+            line-height: 1.72;
+            font-weight: 500;
+        }
+
+        .result-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            width: min(100%, 760px);
+            margin: 30px auto 0;
+        }
+
+        .result-selection-card {
+            padding: 22px 20px;
+            border: 1.5px solid rgba(40, 29, 24, 0.12);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.5);
+            text-align: left;
+            box-shadow: 0 10px 22px rgba(82, 55, 39, 0.04);
+        }
+
+        .result-selection-label {
+            margin: 0 0 10px;
+            color: #8b766c;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .result-selection-value {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(1.15rem, 2vw, 1.6rem);
+            line-height: 1.18;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: #1f1510;
+        }
+
+        .prediction-body {
+            position: relative;
+            z-index: 1;
+            max-width: 920px;
+            min-height: 48vh;
+            margin: 20px auto 0;
+            padding: 52px 46px;
+            border: 1.5px solid rgba(40, 29, 24, 0.92);
+            border-radius: 34px;
+            background:
+                linear-gradient(180deg, rgba(255, 253, 244, 0.98), rgba(255, 249, 227, 0.95)),
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.05), transparent 32%);
+            box-shadow: 0 24px 50px rgba(82, 55, 39, 0.05);
+            text-align: center;
+        }
+
+        .prediction-hero {
+            display: grid;
+            justify-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .prediction-emblem {
+            font-size: 2.7rem;
+            line-height: 1;
+            filter: drop-shadow(0 8px 14px rgba(161, 14, 24, 0.16));
+        }
+
+        .prediction-script {
+            margin: 0;
+            color: #c16988;
+            font-size: clamp(1rem, 1.55vw, 1.2rem);
+            line-height: 1.2;
+            font-weight: 600;
+            font-style: italic;
+            letter-spacing: -0.01em;
+        }
+
+        .prediction-kicker {
+            margin: 0 0 12px;
+            color: #8b766c;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .prediction-headline {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 5vw, 5.2rem);
+            line-height: 0.92;
+            font-weight: 600;
+            letter-spacing: -0.05em;
+            color: #1a120e;
+        }
+
+        .prediction-title-icons {
+            margin: 0;
+            color: #b56d88;
+            font-size: 1.65rem;
+            line-height: 1;
+            letter-spacing: 0.08em;
+        }
+
+        .prediction-copy {
+            max-width: 720px;
+            margin: 22px auto 0;
+            color: #6f5d53;
+            font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+            line-height: 1.72;
+            font-weight: 500;
+        }
+
+        .prediction-note {
+            max-width: 720px;
+            margin: 18px auto 0;
+            color: #8b766c;
+            font-size: clamp(0.98rem, 1.45vw, 1.1rem);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        @media (max-width: 720px) {
+            body {
+                background: var(--sp-red);
+            }
+
+            .welcome-outline {
+                max-width: 430px;
+                padding: 10px;
+            }
+
+            .welcome-canvas {
+                min-height: calc(100vh - 20px);
+                gap: 22px;
+                padding: 24px 16px 28px;
+                border-width: 2px;
+                border-radius: 28px;
+            }
+
+            .outline-brand-row {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+
+            .outline-brand-copy {
+                align-items: center;
+                gap: 6px;
+            }
+
+            .outline-brand-copy h1 {
+                font-size: 2.45rem;
+            }
+
+            .outline-brand-copy span {
+                font-size: 1rem;
+            }
+
+            .outline-quote-card {
+                min-height: 240px;
+                padding: 26px 18px;
+                border-width: 1.5px;
+                border-radius: 24px;
+            }
+
+            .outline-quote-text {
+                font-size: 1.95rem;
+            }
+
+            .outline-quote-subtext {
+                font-size: 0.95rem;
+            }
+
+            .outline-start-button {
+                width: 100%;
+                min-width: 0;
+                padding: 17px 22px;
+                font-size: 1rem;
+            }
+
+            .choice-outline,
+            .result-outline,
+            .prediction-outline {
+                max-width: 430px;
+                padding: 10px;
+            }
+
+            .choice-canvas,
+            .result-canvas,
+            .prediction-canvas {
+                min-height: calc(100vh - 20px);
+                padding: 22px 16px 28px;
+                border-width: 2px;
+                border-radius: 28px;
+            }
+
+            .choice-header,
+            .result-header,
+            .prediction-header {
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 18px;
+            }
+
+            .choice-title,
+            .result-title,
+            .prediction-title {
+                font-size: 2.1rem;
+            }
+
+            .choice-heading,
+            .result-heading {
+                align-items: center;
+                gap: 6px;
+            }
+
+            .choice-subtitle,
+            .result-subtitle,
+            .prediction-subtitle {
+                font-size: 0.94rem;
+                text-align: center;
+            }
+
+            .choice-logo,
+            .result-logo,
+            .prediction-logo {
+                width: 84px;
+            }
+
+            .flavor-panel {
+                margin-top: 2px;
+                padding: 16px 12px;
+                border-radius: 22px;
+            }
+
+            .choice-layout {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                margin-top: 2px;
+            }
+
+            .cake-preview-card {
+                padding: 14px 14px 16px;
+                border-radius: 22px;
+            }
+
+            .cake-preview-title {
+                font-size: 1.55rem;
+                margin-top: 14px;
+            }
+
+            .cake-preview-copy {
+                font-size: 0.92rem;
+                line-height: 1.58;
+            }
+
+            .flavor-list {
+                gap: 8px;
+            }
+
+            .flavor-list.is-two-column {
+                grid-template-columns: 1fr;
+                column-gap: 0;
+            }
+
+            .flavor-option {
+                gap: 10px;
+                padding: 11px 10px;
+                border-radius: 16px;
+            }
+
+            .flavor-dot {
+                width: 9px;
+                height: 9px;
+                margin-top: 10px;
+            }
+
+            .flavor-name {
+                font-size: 1.34rem;
+            }
+
+            .cake-overlay-badge {
+                min-height: 30px;
+                padding: 7px 10px;
+                font-size: 0.82rem;
+            }
+
+            .cake-topping-item.is-fruit {
+                font-size: 1.7rem;
+            }
+
+            .cake-topping-item.is-sprinkle {
+                font-size: 1.18rem;
+            }
+
+            .choice-footer,
+            .result-footer,
+            .prediction-footer {
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .outline-secondary-button {
+                width: 100%;
+                min-width: 0;
+                padding: 14px 18px;
+                font-size: 0.96rem;
+            }
+
+            .result-body {
+                min-height: 300px;
+                padding: 28px 18px;
+                border-width: 1.5px;
+                border-radius: 24px;
+            }
+
+            .prediction-body {
+                min-height: 300px;
+                padding: 28px 18px;
+                border-width: 1.5px;
+                border-radius: 24px;
+            }
+
+            .result-selected {
+                font-size: 2.35rem;
+            }
+
+            .prediction-emblem {
+                font-size: 2.3rem;
+            }
+
+            .prediction-script {
+                font-size: 0.98rem;
+            }
+
+            .prediction-headline {
+                font-size: 2.55rem;
+            }
+
+            .prediction-title-icons {
+                font-size: 1.4rem;
+            }
+
+            .result-copy,
+            .prediction-copy,
+            .prediction-note {
+                font-size: 0.95rem;
+            }
+
+            .result-selection-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-top: 20px;
+            }
+
+            .result-selection-card {
+                padding: 18px 16px;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .welcome-outline,
+            .choice-outline,
+            .result-outline,
+            .prediction-outline {
+                padding: 8px;
+            }
+
+            .welcome-canvas,
+            .choice-canvas,
+            .result-canvas,
+            .prediction-canvas {
+                padding: 20px 14px 24px;
+                border-radius: 24px;
+            }
+
+            .outline-logo {
+                width: 98px;
+            }
+
+            .outline-brand-copy h1 {
+                font-size: 2.2rem;
+            }
+
+            .outline-quote-card {
+                min-height: 210px;
+                padding: 22px 16px;
+            }
+
+            .outline-quote-text {
+                font-size: 1.75rem;
+            }
+
+            .choice-title,
+            .result-title,
+            .prediction-title {
+                font-size: 1.85rem;
+            }
+
+            .choice-logo,
+            .result-logo,
+            .prediction-logo {
+                width: 72px;
+            }
+
+            .prediction-emblem {
+                font-size: 2rem;
+            }
+
+            .cake-preview-card {
+                padding: 12px 12px 14px;
+            }
+
+            .cake-preview-title {
+                font-size: 1.35rem;
+            }
+
+            .flavor-name {
+                font-size: 1.18rem;
+            }
+
+            .outline-start-button,
+            .outline-secondary-button {
+                padding: 13px 16px;
+                font-size: 0.92rem;
+            }
+
+            .prediction-headline {
+                font-size: 2.1rem;
+            }
+
+            .prediction-title-icons {
+                font-size: 1.2rem;
+            }
+
+            .cake-topping-item.is-fruit {
+                font-size: 1.52rem;
+            }
+
+            .cake-topping-item.is-sprinkle {
+                font-size: 1.05rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="app-screen page-welcome" id="welcomePage">
+        <main class="welcome-outline">
+            <section class="welcome-canvas">
+                <div class="welcome-backdrop" aria-hidden="true"></div>
+
+                <header class="outline-brand-row">
+                    <div class="outline-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                    <div class="outline-brand-copy">
+                        <h1>S&amp;P Bakery</h1>
+                        <span>Cake Fortune Studio</span>
+                    </div>
+                </header>
+
+                <section class="outline-quote-card">
+                    <blockquote class="outline-quote-text" id="quoteText">Quality, Value, Integrity</blockquote>
+                    <p class="outline-quote-subtext" id="quoteSubtext">Committed to stability and creativity in every cake we make.</p>
+                </section>
+
+                <button class="outline-start-button" id="startButton" type="button">Start Decorating</button>
+            </section>
+        </main>
+    </section>
+
+    <section class="app-screen page-choice" id="choicePage" hidden>
+        <main class="choice-outline">
+            <section class="choice-canvas">
+                <header class="choice-header">
+                    <div class="choice-heading">
+                        <h2 class="choice-title">Choose a Cake Flavor</h2>
+                        <p class="choice-subtitle">Choose one signature flavor to continue to the next page.</p>
+                    </div>
+                    <div class="choice-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                </header>
+
+                <div class="choice-layout">
+                    <div class="flavor-panel">
+                        <div class="flavor-list">
+                            <button class="flavor-option flavor-select-option is-selected" type="button" data-flavor="Black Forest Cake" data-image="Black_Forest_Cake.jpg" data-cut-image="Black_Forest_Cut.png" aria-pressed="true">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Black Forest Cake</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Cookies & Cream Cake" data-image="Cookies_and_Cream_Cake.jpg" data-cut-image="Cookies_and_Cream_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Cookies and Cream Cake</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Butter Vanilla Cake" data-image="Butter_Vanilla_Cake.jpg" data-cut-image="Butter_Vanilla_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Butter Vanilla Cake</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Pandan Layer Cake" data-image="Pandan_Layer_Cake.jpg" data-cut-image="Pandan_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Pandan Layer Cake</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Chocolate Fudge" data-image="Chocolate_Fudge.jpg" data-cut-image="Chocolate_Fudge_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Chocolate Fudge</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Coffee Almond Cake" data-image="Coffee_Almond_Cake.jpg" data-cut-image="Coffee_Almond_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Coffee Almond Cake</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Orange Layer Cake" data-image="Orange_Layer_Cake.jpg" data-cut-image="Orange_Layer_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Orange Layer Cake</span>
+                            </button>
+                            <button class="flavor-option flavor-select-option" type="button" data-flavor="Hokkaido Milk Cake" data-image="Hokkaido_Milk_Cake.jpg" data-cut-image="White_Hokkaido_Cut.png" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Hokkaido Milk Cake</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img id="cakePreviewImage" src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                        </div>
+                        <h3 class="cake-preview-title" id="cakePreviewTitle">Black Forest Cake</h3>
+                        <p class="cake-preview-copy">Choose a cake flavor from the list to preview the actual cake image before continuing.</p>
+                    </aside>
+                </div>
+
+                <div class="choice-footer">
+                    <button class="outline-secondary-button" id="backToWelcome" type="button">Back to Welcome</button>
+                    <button class="outline-start-button" id="continueToTexture" type="button">Continue to Texture</button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section class="app-screen page-choice" id="texturePage" hidden>
+        <main class="choice-outline">
+            <section class="choice-canvas">
+                <header class="choice-header">
+                    <div class="choice-heading">
+                        <h2 class="choice-title">Choose a Texture</h2>
+                        <p class="choice-subtitle">Choose one finishing texture and see it appear on your selected cake before continuing.</p>
+                    </div>
+                    <div class="choice-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                </header>
+
+                <div class="choice-layout">
+                    <div class="flavor-panel">
+                        <div class="flavor-list">
+                            <button class="flavor-option texture-option" type="button" data-texture="Smooth Cream" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Smooth Cream</span>
+                            </button>
+                            <button class="flavor-option texture-option" type="button" data-texture="Vintage Piping" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Vintage Piping</span>
+                            </button>
+                            <button class="flavor-option texture-option" type="button" data-texture="Minimal Flat Cake" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Minimal Flat Cake</span>
+                            </button>
+                            <button class="flavor-option texture-option" type="button" data-texture="Messy Cream" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Messy Cream</span>
+                            </button>
+                            <button class="flavor-option texture-option" type="button" data-texture="Layered Cream" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Layered Cream</span>
+                            </button>
+                            <button class="flavor-option texture-option" type="button" data-texture="Glossy Ganache" aria-pressed="false">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Glossy Ganache</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Your texture choice will layer on top of the same cake you selected on the flavor page.</p>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="choice-footer">
+                    <button class="outline-secondary-button" id="backToFlavor" type="button">Back to Flavor</button>
+                    <button class="outline-start-button" id="continueToToppings" type="button">Continue to Toppings</button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section class="app-screen page-choice" id="toppingPage" hidden>
+        <main class="choice-outline">
+            <section class="choice-canvas">
+                <header class="choice-header">
+                    <div class="choice-heading">
+                        <h2 class="choice-title">Choose Toppings</h2>
+                        <p class="choice-subtitle">Choose as many toppings as you like, then continue to the next page.</p>
+                    </div>
+                    <div class="choice-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                </header>
+
+                <div class="choice-layout">
+                    <div class="flavor-panel">
+                        <div class="flavor-list is-two-column">
+                            <button class="flavor-option topping-option" type="button" data-topping="Strawberry">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Strawberry</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Orange Slice">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Orange Slice</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Blueberry">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Blueberry</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Matcha Powder">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Matcha Powder</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Almond">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Almond</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Cherry">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Cherry</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Chocolate Bar">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Chocolate Bar</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Macadamia">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Macadamia</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Cookie Crumbs">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Cookie Crumbs</span>
+                            </button>
+                            <button class="flavor-option topping-option" type="button" data-topping="Gold Sprinkle">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Gold Sprinkle</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Every topping you select will stack as a live note over the same cake image.</p>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="choice-footer">
+                    <button class="outline-secondary-button" id="backToTextureChoice" type="button">Back to Texture</button>
+                    <button class="outline-start-button" id="continueToDecoration" type="button">Continue to Decoration</button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section class="app-screen page-choice" id="decorationPage" hidden>
+        <main class="choice-outline">
+            <section class="choice-canvas">
+                <header class="choice-header">
+                    <div class="choice-heading">
+                        <h2 class="choice-title">Decoration</h2>
+                        <p class="choice-subtitle">Choose as many decorations as you like, then continue to the summary.</p>
+                    </div>
+                    <div class="choice-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                </header>
+
+                <div class="choice-layout">
+                    <div class="flavor-panel">
+                        <div class="flavor-list is-two-column">
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Candle">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Candle</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Mini Letter">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Mini Letter</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Ribbon">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Ribbon</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Tiny Flower">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Tiny Flower</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Star Sprinkle">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Star Sprinkle</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Music Note">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Music Note</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Heart Topper">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Heart Topper</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Moon &amp; Star">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Moon &amp; Star</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Pearl Sugar">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Pearl Sugar</span>
+                            </button>
+                            <button class="flavor-option decoration-option" type="button" data-decoration="Rose">
+                                <span class="flavor-dot"></span>
+                                <span class="flavor-name">Rose</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Decorations will appear as the final layer over the same cake you started with.</p>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="choice-footer">
+                    <button class="outline-secondary-button" id="backToTopping" type="button">Back to Topping</button>
+                    <button class="outline-start-button" id="continueToSummary" type="button">Continue to Summary</button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section class="app-screen page-result" id="resultPage" hidden>
+        <main class="result-outline">
+            <section class="result-canvas">
+                <header class="result-header">
+                    <div class="result-heading">
+                        <h2 class="result-title">Selection Summary</h2>
+                        <p class="result-subtitle">You have selected the full cake direction. Continue when you are ready for the next decorating step.</p>
+                    </div>
+                    <div class="result-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                </header>
+
+                <div class="result-body">
+                    <div>
+                        <p class="result-kicker">Your Cake Base</p>
+                        <h3 class="result-selected">Ready to decorate</h3>
+                        <p class="result-copy">Your selections are saved, including flavor, texture, toppings, and decorations for the next step.</p>
+
+                        <div class="result-selection-grid">
+                            <article class="result-selection-card">
+                                <p class="result-selection-label">Flavor</p>
+                                <p class="result-selection-value" id="selectedFlavorText">Vanilla Butter Cake</p>
+                            </article>
+                            <article class="result-selection-card">
+                                <p class="result-selection-label">Texture</p>
+                                <p class="result-selection-value" id="selectedTextureText">Smooth Cream</p>
+                            </article>
+                            <article class="result-selection-card">
+                                <p class="result-selection-label">Topping</p>
+                                <p class="result-selection-value" id="selectedToppingText">Strawberry</p>
+                            </article>
+                            <article class="result-selection-card">
+                                <p class="result-selection-label">Decoration</p>
+                                <p class="result-selection-value" id="selectedDecorationText">Candle</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-footer">
+                    <button class="outline-secondary-button" id="backToDecoration" type="button">Back to Decoration</button>
+                    <button class="outline-start-button" id="continueNext" type="button">Finish Design</button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <section class="app-screen page-prediction" id="predictionPage" hidden>
+        <main class="prediction-outline">
+            <section class="prediction-canvas">
+                <header class="prediction-header">
+                    <div class="result-heading">
+                        <h2 class="prediction-title">Prediction</h2>
+                        <p class="prediction-subtitle">A short reading inspired by your cake flavor, texture, toppings, and decorations.</p>
+                    </div>
+                    <div class="prediction-logo">
+                        <img src="S&amp;P_logo.jpg" alt="S&amp;P logo">
+                    </div>
+                </header>
+
+                <div class="prediction-body">
+                    <div class="prediction-hero">
+                        <div class="prediction-emblem" id="predictionEmblem">❤️</div>
+                        <p class="prediction-script" id="predictionScript">Your Cake Story is Ready ✨</p>
+                        <h3 class="prediction-headline" id="predictionHeadline">Velvet Black Forest Cake</h3>
+                        <p class="prediction-title-icons" id="predictionTitleIcons">🍓 ✨ 🎀</p>
+                    </div>
+                    <p class="prediction-kicker">Cake Fortune</p>
+                    <p class="prediction-copy" id="predictionCopy">Your design points to a calm, rewarding moment that grows brighter as you trust your own timing.</p>
+                    <p class="prediction-note" id="predictionNote">Flavor, texture, toppings, and decorations are woven together to create this short reading.</p>
+                </div>
+
+                <div class="prediction-footer">
+                    <button class="outline-secondary-button" id="backToSummary" type="button">Back to Summary</button>
+                    <button class="outline-start-button" id="restartJourney" type="button">Start Again</button>
+                </div>
+            </section>
+        </main>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const welcomePage = document.getElementById("welcomePage");
+            const choicePage = document.getElementById("choicePage");
+            const texturePage = document.getElementById("texturePage");
+            const toppingPage = document.getElementById("toppingPage");
+            const decorationPage = document.getElementById("decorationPage");
+            const resultPage = document.getElementById("resultPage");
+            const predictionPage = document.getElementById("predictionPage");
+            const startButton = document.getElementById("startButton");
+            const backToWelcome = document.getElementById("backToWelcome");
+            const backToFlavor = document.getElementById("backToFlavor");
+            const backToTextureChoice = document.getElementById("backToTextureChoice");
+            const backToTopping = document.getElementById("backToTopping");
+            const backToDecoration = document.getElementById("backToDecoration");
+            const backToSummary = document.getElementById("backToSummary");
+            const continueToTexture = document.getElementById("continueToTexture");
+            const continueToToppings = document.getElementById("continueToToppings");
+            const continueToDecoration = document.getElementById("continueToDecoration");
+            const continueToSummary = document.getElementById("continueToSummary");
+            const continueNext = document.getElementById("continueNext");
+            const restartJourney = document.getElementById("restartJourney");
+            const cakePreviewImage = document.getElementById("cakePreviewImage");
+            const cakePreviewTitle = document.getElementById("cakePreviewTitle");
+            const cakePreviewImages = document.querySelectorAll("[data-cake-preview-image]");
+            const cakePreviewTitles = document.querySelectorAll("[data-cake-preview-title]");
+            const cakePreviewTextureBadges = document.querySelectorAll("[data-cake-preview-texture]");
+            const cakePreviewToppingBadges = document.querySelectorAll("[data-cake-preview-toppings]");
+            const cakePreviewDecorationBadges = document.querySelectorAll("[data-cake-preview-decorations]");
+            const selectedFlavorText = document.getElementById("selectedFlavorText");
+            const selectedTextureText = document.getElementById("selectedTextureText");
+            const selectedToppingText = document.getElementById("selectedToppingText");
+            const selectedDecorationText = document.getElementById("selectedDecorationText");
+            const predictionEmblem = document.getElementById("predictionEmblem");
+            const predictionScript = document.getElementById("predictionScript");
+            const predictionHeadline = document.getElementById("predictionHeadline");
+            const predictionTitleIcons = document.getElementById("predictionTitleIcons");
+            const predictionCopy = document.getElementById("predictionCopy");
+            const predictionNote = document.getElementById("predictionNote");
+            const flavorButtons = document.querySelectorAll(".flavor-select-option");
+            const textureButtons = document.querySelectorAll(".texture-option");
+            const toppingButtons = document.querySelectorAll(".topping-option");
+            const decorationButtons = document.querySelectorAll(".decoration-option");
+
+            const quoteText = document.getElementById("quoteText");
+            const quoteSubtext = document.getElementById("quoteSubtext");
+            const quotes = [
+                {
+                    title: "Quality, Value, Integrity",
+                    subtitle: "Committed to stability and creativity in every cake we make."
+                },
+                {
+                    title: "Fresh from S&P, made with care",
+                    subtitle: "Welcome to the weekly cake selection experience at S&P Bakery."
+                },
+                {
+                    title: "Start with flavor, finish with style",
+                    subtitle: "Choose your favorite cake details on the next pages and build your perfect design."
+                }
+            ];
+
+            let currentQuoteIndex = 0;
+            const defaultFlavorImage = "Black_Forest_Cake.jpg";
+            let currentScreen = "welcome";
+            let selectedFlavor = "Black Forest Cake";
+            let selectedTexture = "";
+            let selectedToppings = [];
+            let selectedDecorations = [];
+
+            const toppingEmojiMap = {
+                Strawberry: "🍓",
+                Blueberry: "🫐",
+                Almond: "🌰",
+                "Chocolate Bar": "🍫",
+                "Cookie Crumbs": "🍪",
+                "Orange Slice": "🍊",
+                "Matcha Powder": "🍵",
+                Cherry: "🍒",
+                Macadamia: "🥜",
+                "Gold Sprinkle": "✨"
+            };
+
+            const decorationEmojiMap = {
+                Candle: "🕯️",
+                Ribbon: "🎀",
+                "Star Sprinkle": "✨⭐",
+                "Heart Topper": "💖",
+                "Pearl Sugar": "🤍⚪",
+                "Mini Letter": "💌",
+                "Tiny Flower": "🌸",
+                "Music Note": "🎵",
+                "Moon & Star": "🌙⭐",
+                Rose: "🌹"
+            };
+
+            const toppingFruitSet = new Set(["Strawberry", "Blueberry", "Cherry"]);
+
+            const formatSelectionList = (items) => items.length ? items.join(", ") : "-";
+
+            const toggleMultiSelect = (button, value, collection) => {
+                const nextCollection = [...collection];
+                const index = nextCollection.indexOf(value);
+                const isSelected = index >= 0;
+
+                if (isSelected) {
+                    nextCollection.splice(index, 1);
+                } else {
+                    nextCollection.push(value);
+                }
+
+                button.classList.toggle("is-selected", !isSelected);
+                button.setAttribute("aria-pressed", String(!isSelected));
+                return nextCollection;
+            };
+
+            const setSingleSelection = (buttons, activeButton) => {
+                buttons.forEach((button) => {
+                    const isActive = button === activeButton;
+                    button.classList.toggle("is-selected", isActive);
+                    button.setAttribute("aria-pressed", String(isActive));
+                });
+            };
+
+            const updateBadgeGroup = (nodes, label, value) => {
+                nodes.forEach((node) => {
+                    if (!node) return;
+                    if (value) {
+                        node.textContent = `${label}: ${value}`;
+                        node.classList.remove("is-emoji");
+                        node.classList.remove("is-hidden");
+                    } else {
+                        node.textContent = "";
+                        node.classList.remove("is-emoji");
+                        node.classList.add("is-hidden");
+                    }
+                });
+            };
+
+            const updateEmojiBadgeGroup = (nodes, values, emojiMap) => {
+                nodes.forEach((node) => {
+                    if (!node) return;
+                    const toppingCount = values.length;
+                    const gap = toppingCount <= 3 ? 10 : toppingCount <= 5 ? 8.25 : 6.8;
+                    const start = 50 - ((toppingCount - 1) * gap) / 2;
+                    const baselineTop = "44%";
+                    const pieces = [];
+
+                    values.forEach((value, index) => {
+                        const emoji = emojiMap[value];
+                        if (!emoji) return;
+                        const sizeClass = toppingFruitSet.has(value) ? "is-fruit" : "is-sprinkle";
+                        const left = `${start + (index * gap)}%`;
+                        pieces.push(
+                            `<span class="cake-topping-item ${sizeClass}" style="left:${left};top:${baselineTop};">${emoji}</span>`
+                        );
+                    });
+
+                    if (pieces.length) {
+                        node.innerHTML = pieces.join("");
+                        node.classList.add("is-emoji");
+                        node.classList.remove("is-hidden");
+                    } else {
+                        node.innerHTML = "";
+                        node.classList.remove("is-emoji");
+                        node.classList.add("is-hidden");
+                    }
+                });
+            };
+
+            const updateDecorationEmojiBadgeGroup = (nodes, values, emojiMap) => {
+                nodes.forEach((node) => {
+                    if (!node) return;
+
+                    if (currentScreen !== "decoration" || !values.length) {
+                        node.innerHTML = "";
+                        node.classList.remove("is-emoji");
+                        node.classList.add("is-hidden");
+                        return;
+                    }
+
+                    const decorationCount = values.length;
+                    const gap = decorationCount <= 3 ? 11 : decorationCount <= 5 ? 9.1 : 7.4;
+                    const start = 50 - ((decorationCount - 1) * gap) / 2;
+                    const baselineTop = "35.5%";
+                    const pieces = [];
+
+                    values.forEach((value, index) => {
+                        const emoji = emojiMap[value];
+                        if (!emoji) return;
+                        const left = `${start + (index * gap)}%`;
+                        pieces.push(
+                            `<span class="cake-decoration-item" style="left:${left};top:${baselineTop};">${emoji}</span>`
+                        );
+                    });
+
+                    if (pieces.length) {
+                        node.innerHTML = pieces.join("");
+                        node.classList.add("is-emoji");
+                        node.classList.remove("is-hidden");
+                    } else {
+                        node.innerHTML = "";
+                        node.classList.remove("is-emoji");
+                        node.classList.add("is-hidden");
+                    }
+                });
+            };
+
+            const resolveActiveCakeImage = () => {
+                const activeFlavorButton = document.querySelector(".flavor-select-option.is-selected");
+                const activeImage = activeFlavorButton?.dataset.image || defaultFlavorImage;
+                const activeCutImage = activeFlavorButton?.dataset.cutImage;
+                const shouldUseCutImage = Boolean(activeCutImage) &&
+                    ["texture", "topping", "decoration", "result", "prediction"].includes(currentScreen);
+
+                return shouldUseCutImage ? activeCutImage : activeImage;
+            };
+
+            const syncCakeBuildPreview = () => {
+                const activeImage = resolveActiveCakeImage();
+                cakePreviewImages.forEach((image) => {
+                    image.src = activeImage;
+                    image.alt = `${selectedFlavor} preview`;
+                });
+                cakePreviewTitles.forEach((title) => {
+                    title.textContent = selectedFlavor;
+                });
+                updateBadgeGroup(cakePreviewTextureBadges, "Texture", selectedTexture);
+                updateEmojiBadgeGroup(cakePreviewToppingBadges, selectedToppings, toppingEmojiMap);
+                updateDecorationEmojiBadgeGroup(cakePreviewDecorationBadges, selectedDecorations, decorationEmojiMap);
+            };
+
+            const buildPrediction = () => {
+                const flavorMoodMap = {
+                    "Black Forest Cake": "a bold turn of luck",
+                    "Cookies & Cream Cake": "a playful breakthrough",
+                    "Butter Vanilla Cake": "a calm and graceful win",
+                    "Pandan Layer Cake": "a grounded new beginning",
+                    "Chocolate Fudge": "a confident rise",
+                    "Coffee Almond Cake": "a sharp and steady opportunity",
+                    "Orange Layer Cake": "a bright surprise",
+                    "Hokkaido Milk Cake": "a gentle reward"
+                };
+
+                const textureTitleMap = {
+                    "Smooth Cream": "Velvet",
+                    "Vintage Piping": "Vintage",
+                    "Minimal Flat Cake": "Serenity",
+                    "Messy Cream": "Whimsy",
+                    "Layered Cream": "Layered",
+                    "Glossy Ganache": "Glossy"
+                };
+
+                const flavorTitleMap = {
+                    "Black Forest Cake": "Black Forest Cake",
+                    "Cookies & Cream Cake": "Cookies and Cream Cake",
+                    "Butter Vanilla Cake": "Butter Vanilla Cake",
+                    "Pandan Layer Cake": "Pandan Layer Cake",
+                    "Chocolate Fudge": "Chocolate Fudge Cake",
+                    "Coffee Almond Cake": "Coffee Almond Cake",
+                    "Orange Layer Cake": "Orange Layer Cake",
+                    "Hokkaido Milk Cake": "Hokkaido Milk Cake"
+                };
+
+                const textureEnergyMap = {
+                    "Smooth Cream": "Your path feels smooth and settled.",
+                    "Vintage Piping": "A nostalgic detail may return with new value.",
+                    "Minimal Flat Cake": "Simple choices will bring the strongest result.",
+                    "Messy Cream": "Beautiful chaos will work in your favor.",
+                    "Layered Cream": "Patience will reveal deeper rewards.",
+                    "Glossy Ganache": "A polished finish will attract attention."
+                };
+
+                const toppingEnergyMap = {
+                    Strawberry: "Warm connections are gathering around you.",
+                    Blueberry: "A thoughtful idea will become more valuable soon.",
+                    Almond: "Practical effort will pay off.",
+                    "Chocolate Bar": "A rich opportunity is closer than it looks.",
+                    "Cookie Crumbs": "Small details will strengthen the whole plan.",
+                    "Orange Slice": "Fresh energy is entering your week.",
+                    "Matcha Powder": "Balance and focus will steady your next move.",
+                    Cherry: "A standout moment will draw attention to you.",
+                    Macadamia: "Comfort and confidence are building together.",
+                    "Gold Sprinkle": "A lucky highlight is ready to shine."
+                };
+
+                const decorationEnergyMap = {
+                    Candle: "Make one clear wish and act on it.",
+                    Ribbon: "A meaningful bond will tie things together.",
+                    "Star Sprinkle": "Your next step carries extra luck.",
+                    "Heart Topper": "Lead with sincerity and the answer will open.",
+                    "Pearl Sugar": "Soft elegance will leave the strongest impression.",
+                    "Mini Letter": "A message or reply matters now.",
+                    "Tiny Flower": "Gentle gestures will be remembered.",
+                    "Music Note": "Follow the rhythm that already feels right.",
+                    "Moon & Star": "Trust quiet intuition over loud pressure.",
+                    Rose: "Romance, beauty, or self-worth will bloom."
+                };
+
+                const toppingLine = selectedToppings.length
+                    ? toppingEnergyMap[selectedToppings[0]] || "Your chosen details carry sweet momentum."
+                    : "Even a simple design can hold strong fortune.";
+
+                const decorationLine = selectedDecorations.length
+                    ? decorationEnergyMap[selectedDecorations[0]] || "Your final touch points toward a meaningful result."
+                    : "The final touch will matter more than you expect.";
+
+                const titleIcons = [
+                    ...(selectedToppings.slice(0, 2).map((value) => toppingEmojiMap[value]).filter(Boolean)),
+                    ...(selectedDecorations.slice(0, 2).map((value) => decorationEmojiMap[value]).filter(Boolean))
+                ];
+
+                const emblem = selectedDecorations.includes("Heart Topper")
+                    ? "💖"
+                    : selectedDecorations.includes("Rose")
+                        ? "🌹"
+                        : selectedToppings.includes("Cherry")
+                            ? "🍒"
+                            : "❤️";
+
+                return {
+                    emblem,
+                    script: "Your Cake Story is Ready ✨",
+                    title: `${textureTitleMap[selectedTexture] || "Signature"} ${flavorTitleMap[selectedFlavor] || "Cake Story"}`,
+                    titleIcons: titleIcons.join(" "),
+                    headline: `Your cake predicts ${flavorMoodMap[selectedFlavor] || "a sweet new chapter"}.`,
+                    copy: `${textureEnergyMap[selectedTexture] || "Your design suggests calm momentum."} ${toppingLine} ${decorationLine}`,
+                    note: `Built from ${selectedFlavor || "your flavor"} with ${selectedTexture || "your texture"}, toppings: ${formatSelectionList(selectedToppings)}, and decorations: ${formatSelectionList(selectedDecorations)}.`
+                };
+            };
+
+            const resetSelections = () => {
+                selectedFlavor = "Black Forest Cake";
+                selectedTexture = "";
+                selectedToppings = [];
+                selectedDecorations = [];
+                if (cakePreviewImage) {
+                    cakePreviewImage.src = defaultFlavorImage;
+                    cakePreviewImage.alt = "Black Forest Cake preview";
+                }
+                if (cakePreviewTitle) {
+                    cakePreviewTitle.textContent = "Black Forest Cake";
+                }
+                selectedFlavorText.textContent = "Black Forest Cake";
+                selectedTextureText.textContent = "Smooth Cream";
+                selectedToppingText.textContent = "Strawberry";
+                selectedDecorationText.textContent = "Candle";
+                flavorButtons.forEach((button) => {
+                    const isDefault = button.dataset.flavor === "Black Forest Cake";
+                    button.classList.toggle("is-selected", isDefault);
+                    button.setAttribute("aria-pressed", String(isDefault));
+                });
+                textureButtons.forEach((button) => {
+                    button.classList.remove("is-selected");
+                    button.setAttribute("aria-pressed", "false");
+                });
+                toppingButtons.forEach((button) => {
+                    button.classList.remove("is-selected");
+                    button.setAttribute("aria-pressed", "false");
+                });
+                decorationButtons.forEach((button) => {
+                    button.classList.remove("is-selected");
+                    button.setAttribute("aria-pressed", "false");
+                });
+            };
+
+            const showScreen = (screen) => {
+                currentScreen = screen;
+                welcomePage.hidden = screen !== "welcome";
+                choicePage.hidden = screen !== "choice";
+                texturePage.hidden = screen !== "texture";
+                toppingPage.hidden = screen !== "topping";
+                decorationPage.hidden = screen !== "decoration";
+                resultPage.hidden = screen !== "result";
+                predictionPage.hidden = screen !== "prediction";
+                syncCakeBuildPreview();
+                window.scrollTo(0, 0);
+            };
+
+            startButton.addEventListener("click", () => {
+                showScreen("choice");
+            });
+
+            backToWelcome.addEventListener("click", () => {
+                showScreen("welcome");
+            });
+
+            backToFlavor.addEventListener("click", () => {
+                showScreen("choice");
+            });
+
+            flavorButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    selectedFlavor = button.dataset.flavor || "";
+                    setSingleSelection(flavorButtons, button);
+                    if (cakePreviewImage) {
+                        cakePreviewImage.src = button.dataset.image || "";
+                        cakePreviewImage.alt = `${selectedFlavor} preview`;
+                    }
+                    if (cakePreviewTitle) {
+                        cakePreviewTitle.textContent = selectedFlavor;
+                    }
+                    syncCakeBuildPreview();
+                });
+            });
+
+            continueToTexture.addEventListener("click", () => {
+                showScreen("texture");
+            });
+
+            backToTextureChoice.addEventListener("click", () => {
+                showScreen("texture");
+            });
+
+            textureButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    selectedTexture = button.dataset.texture || "";
+                    setSingleSelection(textureButtons, button);
+                    syncCakeBuildPreview();
+                });
+            });
+
+            continueToToppings.addEventListener("click", () => {
+                showScreen("topping");
+            });
+
+            toppingButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const toppingValue = button.dataset.topping || "";
+                    selectedToppings = toggleMultiSelect(button, toppingValue, selectedToppings);
+                    syncCakeBuildPreview();
+                });
+            });
+
+            continueToDecoration.addEventListener("click", () => {
+                showScreen("decoration");
+            });
+
+            backToTopping.addEventListener("click", () => {
+                showScreen("topping");
+            });
+
+            decorationButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const decorationValue = button.dataset.decoration || "";
+                    selectedDecorations = toggleMultiSelect(button, decorationValue, selectedDecorations);
+                    syncCakeBuildPreview();
+                });
+            });
+
+            continueToSummary.addEventListener("click", () => {
+                selectedFlavorText.textContent = selectedFlavor;
+                selectedTextureText.textContent = selectedTexture;
+                selectedToppingText.textContent = formatSelectionList(selectedToppings);
+                selectedDecorationText.textContent = formatSelectionList(selectedDecorations);
+                showScreen("result");
+            });
+
+            backToDecoration.addEventListener("click", () => {
+                showScreen("decoration");
+            });
+
+            continueNext.addEventListener("click", () => {
+                const prediction = buildPrediction();
+                predictionEmblem.textContent = prediction.emblem;
+                predictionScript.textContent = prediction.script;
+                predictionHeadline.textContent = prediction.title;
+                predictionTitleIcons.textContent = prediction.titleIcons || "✨";
+                predictionCopy.textContent = prediction.copy;
+                predictionNote.textContent = prediction.note;
+                showScreen("prediction");
+            });
+
+            backToSummary.addEventListener("click", () => {
+                showScreen("result");
+            });
+
+            restartJourney.addEventListener("click", () => {
+                resetSelections();
+                showScreen("welcome");
+            });
+
+            syncCakeBuildPreview();
+
+            const swapQuote = () => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                quoteText.classList.add("is-fading");
+                quoteSubtext.classList.add("is-fading");
+
+                window.setTimeout(() => {
+                    quoteText.textContent = quotes[currentQuoteIndex].title;
+                    quoteSubtext.textContent = quotes[currentQuoteIndex].subtitle;
+                    quoteText.classList.remove("is-fading");
+                    quoteSubtext.classList.remove("is-fading");
+                }, 180);
+            };
+
+            window.setInterval(swapQuote, 4200);
+        });
+    </script>
+</body>
+</html>
