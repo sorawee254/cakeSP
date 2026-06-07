@@ -366,6 +366,10 @@
             margin-top: 10px;
         }
 
+        .choice-layout > * {
+            min-width: 0;
+        }
+
         .choice-layout .flavor-panel {
             max-width: none;
             margin-top: 0;
@@ -570,6 +574,11 @@
             display: flex;
             gap: 14px;
             flex-wrap: wrap;
+        }
+
+        .choice-footer {
+            width: 100%;
+            max-width: 1180px;
         }
 
         .outline-secondary-button {
@@ -874,13 +883,17 @@
 
             .choice-layout {
                 grid-template-columns: 1fr;
-                gap: 14px;
+                gap: 16px;
                 margin-top: 2px;
             }
 
             .cake-preview-card {
                 padding: 14px 14px 16px;
                 border-radius: 22px;
+            }
+
+            .cake-preview-frame {
+                aspect-ratio: 1 / 1.06;
             }
 
             .cake-preview-title {
@@ -935,10 +948,13 @@
             .choice-footer,
             .result-footer,
             .prediction-footer {
+                flex-direction: column;
+                align-items: stretch;
                 gap: 10px;
                 margin-top: 20px;
             }
 
+            .choice-footer .outline-start-button,
             .outline-secondary-button {
                 width: 100%;
                 min-width: 0;
@@ -1123,6 +1139,14 @@
                 </header>
 
                 <div class="choice-layout">
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img id="cakePreviewImage" src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                        </div>
+                        <h3 class="cake-preview-title" id="cakePreviewTitle">Black Forest Cake</h3>
+                        <p class="cake-preview-copy">Choose a cake flavor from the list to preview the actual cake image before continuing.</p>
+                    </aside>
+
                     <div class="flavor-panel">
                         <div class="flavor-list">
                             <button class="flavor-option flavor-select-option is-selected" type="button" data-flavor="Black Forest Cake" data-image="Black_Forest_Cake.jpg" data-cut-image="Black_Forest_Cut.png" aria-pressed="true">
@@ -1159,19 +1183,11 @@
                             </button>
                         </div>
                     </div>
-
-                    <aside class="cake-preview-card">
-                        <div class="cake-preview-frame">
-                            <img id="cakePreviewImage" src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
-                        </div>
-                        <h3 class="cake-preview-title" id="cakePreviewTitle">Black Forest Cake</h3>
-                        <p class="cake-preview-copy">Choose a cake flavor from the list to preview the actual cake image before continuing.</p>
-                    </aside>
                 </div>
 
                 <div class="choice-footer">
-                    <button class="outline-secondary-button" id="backToWelcome" type="button">Back to Welcome</button>
                     <button class="outline-start-button" id="continueToTexture" type="button">Continue to Texture</button>
+                    <button class="outline-secondary-button" id="backToWelcome" type="button">Back to Welcome</button>
                 </div>
             </section>
         </main>
@@ -1191,6 +1207,25 @@
                 </header>
 
                 <div class="choice-layout">
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Your texture choice will layer on top of the same cake you selected on the flavor page.</p>
+                        </div>
+                    </aside>
+
                     <div class="flavor-panel">
                         <div class="flavor-list">
                             <button class="flavor-option texture-option" type="button" data-texture="Smooth Cream" aria-pressed="false">
@@ -1219,30 +1254,11 @@
                             </button>
                         </div>
                     </div>
-
-                    <aside class="cake-preview-card">
-                        <div class="cake-preview-frame">
-                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
-                            <div class="cake-preview-overlay">
-                                <div class="cake-overlay-row">
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
-                                </div>
-                                <div class="cake-overlay-row is-bottom">
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cake-preview-meta">
-                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
-                            <p class="cake-preview-copy">Your texture choice will layer on top of the same cake you selected on the flavor page.</p>
-                        </div>
-                    </aside>
                 </div>
 
                 <div class="choice-footer">
-                    <button class="outline-secondary-button" id="backToFlavor" type="button">Back to Flavor</button>
                     <button class="outline-start-button" id="continueToToppings" type="button">Continue to Toppings</button>
+                    <button class="outline-secondary-button" id="backToFlavor" type="button">Back to Flavor</button>
                 </div>
             </section>
         </main>
@@ -1262,6 +1278,25 @@
                 </header>
 
                 <div class="choice-layout">
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Every topping you select will stack as a live note over the same cake image.</p>
+                        </div>
+                    </aside>
+
                     <div class="flavor-panel">
                         <div class="flavor-list is-two-column">
                             <button class="flavor-option topping-option" type="button" data-topping="Strawberry">
@@ -1306,30 +1341,11 @@
                             </button>
                         </div>
                     </div>
-
-                    <aside class="cake-preview-card">
-                        <div class="cake-preview-frame">
-                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
-                            <div class="cake-preview-overlay">
-                                <div class="cake-overlay-row">
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
-                                </div>
-                                <div class="cake-overlay-row is-bottom">
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cake-preview-meta">
-                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
-                            <p class="cake-preview-copy">Every topping you select will stack as a live note over the same cake image.</p>
-                        </div>
-                    </aside>
                 </div>
 
                 <div class="choice-footer">
-                    <button class="outline-secondary-button" id="backToTextureChoice" type="button">Back to Texture</button>
                     <button class="outline-start-button" id="continueToDecoration" type="button">Continue to Decoration</button>
+                    <button class="outline-secondary-button" id="backToTextureChoice" type="button">Back to Texture</button>
                 </div>
             </section>
         </main>
@@ -1349,6 +1365,25 @@
                 </header>
 
                 <div class="choice-layout">
+                    <aside class="cake-preview-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Decorations will appear as the final layer over the same cake you started with.</p>
+                        </div>
+                    </aside>
+
                     <div class="flavor-panel">
                         <div class="flavor-list is-two-column">
                             <button class="flavor-option decoration-option" type="button" data-decoration="Candle">
@@ -1393,30 +1428,11 @@
                             </button>
                         </div>
                     </div>
-
-                    <aside class="cake-preview-card">
-                        <div class="cake-preview-frame">
-                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
-                            <div class="cake-preview-overlay">
-                                <div class="cake-overlay-row">
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
-                                </div>
-                                <div class="cake-overlay-row is-bottom">
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
-                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cake-preview-meta">
-                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
-                            <p class="cake-preview-copy">Decorations will appear as the final layer over the same cake you started with.</p>
-                        </div>
-                    </aside>
                 </div>
 
                 <div class="choice-footer">
-                    <button class="outline-secondary-button" id="backToTopping" type="button">Back to Topping</button>
                     <button class="outline-start-button" id="continueToSummary" type="button">Continue to Summary</button>
+                    <button class="outline-secondary-button" id="backToTopping" type="button">Back to Topping</button>
                 </div>
             </section>
         </main>
