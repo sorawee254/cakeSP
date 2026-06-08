@@ -767,6 +767,46 @@
             font-weight: 500;
         }
 
+        .prediction-lucky-card {
+            max-width: 720px;
+            margin: 26px auto 0;
+            padding: 22px 22px 24px;
+            border: 1.5px solid rgba(40, 29, 24, 0.12);
+            border-radius: 24px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 249, 227, 0.9)),
+                radial-gradient(circle at top right, rgba(161, 14, 24, 0.06), transparent 36%);
+            box-shadow: 0 12px 24px rgba(82, 55, 39, 0.05);
+            text-align: left;
+        }
+
+        .prediction-lucky-kicker {
+            margin: 0 0 10px;
+            color: #8b766c;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .prediction-lucky-name {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(1.45rem, 2.2vw, 2rem);
+            line-height: 1.04;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: #1f1510;
+        }
+
+        .prediction-lucky-copy {
+            margin: 12px 0 0;
+            color: #7a665c;
+            font-size: clamp(0.96rem, 1.45vw, 1.08rem);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
         @media (max-width: 720px) {
             body {
                 background: var(--sp-red);
@@ -998,7 +1038,8 @@
 
             .result-copy,
             .prediction-copy,
-            .prediction-note {
+            .prediction-note,
+            .prediction-lucky-copy {
                 font-size: 0.95rem;
             }
 
@@ -1011,6 +1052,16 @@
             .result-selection-card {
                 padding: 18px 16px;
                 border-radius: 20px;
+            }
+
+            .prediction-lucky-card {
+                margin-top: 22px;
+                padding: 18px 16px 20px;
+                border-radius: 20px;
+            }
+
+            .prediction-lucky-name {
+                font-size: 1.45rem;
             }
         }
 
@@ -1509,6 +1560,12 @@
                     <p class="prediction-kicker">Cake Fortune</p>
                     <p class="prediction-copy" id="predictionCopy">Your design points to a calm, rewarding moment that grows brighter as you trust your own timing.</p>
                     <p class="prediction-note" id="predictionNote">Flavor, texture, toppings, and decorations are woven together to create this short reading.</p>
+                    <div class="prediction-lucky-card">
+                        <p class="prediction-lucky-kicker">Your Lucky Cake Match</p>
+                        <h4 class="prediction-lucky-name" id="predictionLuckyName">Tonight We Are Young</h4>
+                        <p class="prediction-lucky-copy" id="predictionLuckyCopy">Matched from your Black Forest mood and the fortune your cake is carrying tonight.</p>
+                    </div>
+                    <button class="outline-start-button" id="orderLuckyCake" type="button">Order My Lucky Cake</button>
                 </div>
 
                 <div class="prediction-footer">
@@ -1541,6 +1598,7 @@
             const continueToSummary = document.getElementById("continueToSummary");
             const continueNext = document.getElementById("continueNext");
             const restartJourney = document.getElementById("restartJourney");
+            const orderLuckyCake = document.getElementById("orderLuckyCake");
             const cakePreviewImage = document.getElementById("cakePreviewImage");
             const cakePreviewTitle = document.getElementById("cakePreviewTitle");
             const cakePreviewImages = document.querySelectorAll("[data-cake-preview-image]");
@@ -1558,6 +1616,9 @@
             const predictionTitleIcons = document.getElementById("predictionTitleIcons");
             const predictionCopy = document.getElementById("predictionCopy");
             const predictionNote = document.getElementById("predictionNote");
+            const predictionLuckyName = document.getElementById("predictionLuckyName");
+            const predictionLuckyCopy = document.getElementById("predictionLuckyCopy");
+            let currentLuckyCakeImage = "Tonight_We.jpg";
             const flavorButtons = document.querySelectorAll(".flavor-select-option");
             const textureButtons = document.querySelectorAll(".texture-option");
             const toppingButtons = document.querySelectorAll(".topping-option");
@@ -1791,6 +1852,15 @@
                     "Glossy Ganache": "A polished finish will attract attention."
                 };
 
+                const textureMoodMap = {
+                    "Smooth Cream": "soft and settled",
+                    "Vintage Piping": "nostalgic and tender",
+                    "Minimal Flat Cake": "clean and quietly certain",
+                    "Messy Cream": "playful and full of motion",
+                    "Layered Cream": "heartfelt and patient",
+                    "Glossy Ganache": "polished and magnetic"
+                };
+
                 const toppingEnergyMap = {
                     Strawberry: "Warm connections are gathering around you.",
                     Blueberry: "A thoughtful idea will become more valuable soon.",
@@ -1825,6 +1895,49 @@
                     ? decorationEnergyMap[selectedDecorations[0]] || "Your final touch points toward a meaningful result."
                     : "The final touch will matter more than you expect.";
 
+                const luckyCakeMap = {
+                    "Cookies & Cream Cake": {
+                        name: "Last Dance In White",
+                        line: "A cookies-and-cream match for playful endings, sweet memories, and one more song before the night is over.",
+                        image: "Last_Dance_In_White.jpg"
+                    },
+                    "Chocolate Fudge": {
+                        name: "The Final Fudge Scene",
+                        line: "A rich dramatic match for bold chocolate moods, full feelings, and a scene-stealing finish.",
+                        image: "The_Final_Fudge.jpg"
+                    },
+                    "Hokkaido Milk Cake": {
+                        name: "Snowfall In Hokkaido",
+                        line: "A soft milky match for gentle joy, light hearts, and calm moments that feel beautifully still.",
+                        image: "Snowfall_Hokkaido.jpg"
+                    },
+                    "Orange Layer Cake": {
+                        name: "Almost Sunny Again",
+                        line: "A bright citrus match for hopeful turns, clearer skies, and the feeling that better days are arriving.",
+                        image: "Almost_Sunny_again.jpg"
+                    },
+                    "Butter Vanilla Cake": {
+                        name: "Once Upon a Wish",
+                        line: "A warm classic match for wishes, birthdays, and sweet moments you want to keep close.",
+                        image: "once_upon.jpg"
+                    },
+                    "Coffee Almond Cake": {
+                        name: "Cafe At 7:15",
+                        line: "A coffee-almond match for quiet conversations, warm lights, and slow, thoughtful confidence.",
+                        image: "Cafe_At_7_15.jpg"
+                    },
+                    "Black Forest Cake": {
+                        name: "Tonight We Are Young",
+                        line: "A black-forest match for dark chocolate drama, bright cherries, and nights worth remembering.",
+                        image: "Tonight_We.jpg"
+                    },
+                    "Pandan Layer Cake": {
+                        name: "Dear Home With Love",
+                        line: "A pandan match for familiar comfort, home-like sweetness, and memories held softly with love.",
+                        image: "Dear_Home.jpg"
+                    }
+                };
+
                 const titleIcons = [
                     ...(selectedToppings.slice(0, 2).map((value) => toppingEmojiMap[value]).filter(Boolean)),
                     ...(selectedDecorations.slice(0, 2).map((value) => decorationEmojiMap[value]).filter(Boolean))
@@ -1838,6 +1951,16 @@
                             ? "🍒"
                             : "❤️";
 
+                const luckyCake = luckyCakeMap[selectedFlavor] || {
+                    name: "Your Signature Slice",
+                    line: "A lucky cake match shaped by your flavor, your fortune, and the details you chose today.",
+                    image: defaultFlavorImage
+                };
+
+                const luckyTextureTail = textureMoodMap[selectedTexture]
+                    ? ` It suits the ${textureMoodMap[selectedTexture]} tone your design is carrying.`
+                    : "";
+
                 return {
                     emblem,
                     script: "Your Cake Story is Ready ✨",
@@ -1845,7 +1968,10 @@
                     titleIcons: titleIcons.join(" "),
                     headline: `Your cake predicts ${flavorMoodMap[selectedFlavor] || "a sweet new chapter"}.`,
                     copy: `${textureEnergyMap[selectedTexture] || "Your design suggests calm momentum."} ${toppingLine} ${decorationLine}`,
-                    note: `Built from ${selectedFlavor || "your flavor"} with ${selectedTexture || "your texture"}, toppings: ${formatSelectionList(selectedToppings)}, and decorations: ${formatSelectionList(selectedDecorations)}.`
+                    note: `Built from ${selectedFlavor || "your flavor"} with ${selectedTexture || "your texture"}, toppings: ${formatSelectionList(selectedToppings)}, and decorations: ${formatSelectionList(selectedDecorations)}.`,
+                    luckyName: luckyCake.name,
+                    luckyCopy: `${luckyCake.line}${luckyTextureTail}`,
+                    luckyImage: luckyCake.image
                 };
             };
 
@@ -1988,6 +2114,9 @@
                 predictionTitleIcons.textContent = prediction.titleIcons || "✨";
                 predictionCopy.textContent = prediction.copy;
                 predictionNote.textContent = prediction.note;
+                predictionLuckyName.textContent = prediction.luckyName;
+                predictionLuckyCopy.textContent = prediction.luckyCopy;
+                currentLuckyCakeImage = prediction.luckyImage;
                 showScreen("prediction");
             });
 
@@ -1998,6 +2127,11 @@
             restartJourney.addEventListener("click", () => {
                 resetSelections();
                 showScreen("welcome");
+            });
+
+            orderLuckyCake.addEventListener("click", () => {
+                if (!currentLuckyCakeImage) return;
+                window.open(currentLuckyCakeImage, "_blank", "noopener,noreferrer");
             });
 
             syncCakeBuildPreview();
