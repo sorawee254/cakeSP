@@ -807,6 +807,23 @@
             font-weight: 500;
         }
 
+        .prediction-lucky-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            max-width: 720px;
+            margin: 18px auto 0;
+        }
+
+        .prediction-lucky-actions .outline-start-button,
+        .prediction-lucky-actions .outline-secondary-button {
+            width: 100%;
+            min-width: 0;
+            margin-top: 0;
+            padding: 15px 18px;
+            font-size: clamp(0.96rem, 1.4vw, 1.08rem);
+        }
+
         @media (max-width: 720px) {
             body {
                 background: var(--sp-red);
@@ -1063,6 +1080,11 @@
             .prediction-lucky-name {
                 font-size: 1.45rem;
             }
+
+            .prediction-lucky-actions {
+                gap: 10px;
+                margin-top: 16px;
+            }
         }
 
         @media (max-width: 420px) {
@@ -1130,6 +1152,10 @@
             .outline-secondary-button {
                 padding: 13px 16px;
                 font-size: 0.92rem;
+            }
+
+            .prediction-lucky-actions {
+                grid-template-columns: 1fr;
             }
 
             .prediction-headline {
@@ -1565,7 +1591,10 @@
                         <h4 class="prediction-lucky-name" id="predictionLuckyName">Tonight We Are Young</h4>
                         <p class="prediction-lucky-copy" id="predictionLuckyCopy">Matched from your Black Forest mood and the fortune your cake is carrying tonight.</p>
                     </div>
-                    <button class="outline-start-button" id="orderLuckyCake" type="button">Order My Lucky Cake</button>
+                    <div class="prediction-lucky-actions">
+                        <button class="outline-start-button" id="orderLuckyCake" type="button">Order My Lucky Cake</button>
+                        <button class="outline-secondary-button" id="shareLuckyCake" type="button">Share to your story</button>
+                    </div>
                 </div>
 
                 <div class="prediction-footer">
@@ -1599,6 +1628,7 @@
             const continueNext = document.getElementById("continueNext");
             const restartJourney = document.getElementById("restartJourney");
             const orderLuckyCake = document.getElementById("orderLuckyCake");
+            const shareLuckyCake = document.getElementById("shareLuckyCake");
             const cakePreviewImage = document.getElementById("cakePreviewImage");
             const cakePreviewTitle = document.getElementById("cakePreviewTitle");
             const cakePreviewImages = document.querySelectorAll("[data-cake-preview-image]");
@@ -1619,6 +1649,7 @@
             const predictionLuckyName = document.getElementById("predictionLuckyName");
             const predictionLuckyCopy = document.getElementById("predictionLuckyCopy");
             let currentLuckyCakeImage = "Tonight_We.jpg";
+            let currentLuckyCakeTitle = "Tonight We Are Young";
             const flavorButtons = document.querySelectorAll(".flavor-select-option");
             const textureButtons = document.querySelectorAll(".texture-option");
             const toppingButtons = document.querySelectorAll(".topping-option");
@@ -2117,6 +2148,7 @@
                 predictionLuckyName.textContent = prediction.luckyName;
                 predictionLuckyCopy.textContent = prediction.luckyCopy;
                 currentLuckyCakeImage = prediction.luckyImage;
+                currentLuckyCakeTitle = prediction.luckyName;
                 showScreen("prediction");
             });
 
@@ -2131,6 +2163,36 @@
 
             orderLuckyCake.addEventListener("click", () => {
                 if (!currentLuckyCakeImage) return;
+                window.open(currentLuckyCakeImage, "_blank", "noopener,noreferrer");
+            });
+
+            shareLuckyCake.addEventListener("click", async () => {
+                const shareText = `${currentLuckyCakeTitle}\n${predictionLuckyCopy.textContent}`;
+                const shareUrl = new URL(currentLuckyCakeImage, window.location.href).href;
+
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: currentLuckyCakeTitle,
+                            text: shareText,
+                            url: shareUrl
+                        });
+                        return;
+                    } catch (error) {
+                        if (error && error.name === "AbortError") return;
+                    }
+                }
+
+                if (navigator.clipboard?.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+                        window.alert("Lucky cake story copied. You can paste it into your story.");
+                        return;
+                    } catch (error) {
+                        // Fall through to opening the image if clipboard is blocked.
+                    }
+                }
+
                 window.open(currentLuckyCakeImage, "_blank", "noopener,noreferrer");
             });
 
