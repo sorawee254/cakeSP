@@ -706,6 +706,12 @@
             margin-bottom: 20px;
         }
 
+        .prediction-cake-card {
+            max-width: 420px;
+            margin: 0 auto 26px;
+            text-align: left;
+        }
+
         .prediction-emblem {
             font-size: 2.7rem;
             line-height: 1;
@@ -1075,6 +1081,11 @@
                 margin-top: 22px;
                 padding: 18px 16px 20px;
                 border-radius: 20px;
+            }
+
+            .prediction-cake-card {
+                max-width: 100%;
+                margin-bottom: 22px;
             }
 
             .prediction-lucky-name {
@@ -1583,6 +1594,24 @@
                         <h3 class="prediction-headline" id="predictionHeadline">Velvet Black Forest Cake</h3>
                         <p class="prediction-title-icons" id="predictionTitleIcons">🍓 ✨ 🎀</p>
                     </div>
+                    <aside class="cake-preview-card prediction-cake-card">
+                        <div class="cake-preview-frame">
+                            <img data-cake-preview-image src="Black_Forest_Cake.jpg" alt="Black Forest Cake preview">
+                            <div class="cake-preview-overlay">
+                                <div class="cake-overlay-row">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-texture></span>
+                                </div>
+                                <div class="cake-overlay-row is-bottom">
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-toppings></span>
+                                    <span class="cake-overlay-badge is-hidden" data-cake-preview-decorations></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cake-preview-meta">
+                            <h3 class="cake-preview-title" data-cake-preview-title>Black Forest Cake</h3>
+                            <p class="cake-preview-copy">Your decorated cake stays with the final fortune, so you can see the exact design you created.</p>
+                        </div>
+                    </aside>
                     <p class="prediction-kicker">Cake Fortune</p>
                     <p class="prediction-copy" id="predictionCopy">Your design points to a calm, rewarding moment that grows brighter as you trust your own timing.</p>
                     <p class="prediction-note" id="predictionNote">Flavor, texture, toppings, and decorations are woven together to create this short reading.</p>
@@ -1784,7 +1813,7 @@
                 nodes.forEach((node) => {
                     if (!node) return;
 
-                    if (currentScreen !== "decoration" || !values.length) {
+                    if (!["decoration", "prediction"].includes(currentScreen) || !values.length) {
                         node.innerHTML = "";
                         node.classList.remove("is-emoji");
                         node.classList.add("is-hidden");
